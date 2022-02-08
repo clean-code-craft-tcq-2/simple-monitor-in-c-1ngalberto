@@ -8,6 +8,7 @@
 #define Temp_High		45;
 #define	Soc_Low			20;
 #define Soc_High		80;
+#define ChargeRate_Low	0;
 #define ChargeRate_High	0.8;
 #define Battery_NOK		0;
 #define Battery_OK 		1;
@@ -15,46 +16,29 @@
 int batteryIsOk(float temperature, float soc, float chargeRate) {
 
   int isAllOk_f = E_OK;
-  isAllOk_f  = isTemperatureInRange (float temperature);
-  isAllOk_f |= isSocInRange (float soc);
-  isAllOk_f |= isChargeRateInRange (float chargeRate);
+  isAllOk_f  = CheckParamIsInRange (float temperature,float Temp_Low,float Temp_High , char "Temperature");
+  isAllOk_f |= CheckParamIsInRange (float soc,float Soc_Low,float Soc_High , char "Soc");
+  isAllOk_f |= CheckParamIsInRange (float chargeRate,float ChargeRate_Low,float ChargeRate_High , char "ChargeRate");
 
   return (isAllOk_f == E_OK) ? Battery_OK:Battery_NOK;
 }
 
-int isTemperatureInRange (float temperature)
+int CheckParamIsInRange (float inParamToCheck,float Lower_Limit ,float Upper_Limit , char ParamName)
 {
 	int Error = E_OK;
-	if(temperature < Temp_Low || temperature > Temp_High)
+	if(inParamToCheck < Lower_Limit )
 	{
-	    printf("Temperature out of range!\n");
+	    printf("%c IS LOW!\n", ParamName);
 	    Error = E_NOK;
 	}
-	else{}
-	return Error;
-}
-
-int isSocInRange (float soc)
-{
-	int Error = E_OK;
-	if(soc < Soc_Low || soc > Soc_High)
+	else if (inParamToCheck > Upper_Limit)
 	{
-		printf("State of Charge out of range!\n");
-		Error = E_NOK;
-	}
-	else{}
-	return Error;
-}
-
-int isChargeRateInRange (float chargeRate)
-{
-	int Error = E_OK;
-	if(chargeRate > ChargeRate_High)
-	{
-	    printf("Charge Rate out of range!\n");
+		printf("%c is HIGH!\n", ParamName);
 	    Error = E_NOK;
 	}
-	else{}
+	else{
+		printf("%c is in range!\n", ParamName);
+	}
 	return Error;
 }
 
